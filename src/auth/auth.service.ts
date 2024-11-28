@@ -47,6 +47,10 @@ export class AuthService {
     if (!user || !bcrypt.compareSync(password, user.password))
       throw new UnauthorizedException('Invalid credentials');
 
+    console.log('Email:', email);
+    console.log('User found:', user);
+    console.log('Password match:', bcrypt.compareSync(password, user.password));
+
     return {
       user_id: user.id,
       email: user.email,
