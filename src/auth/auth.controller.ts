@@ -19,6 +19,7 @@ import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from './guards/roles.guard';
 import { Roles } from './decorators/roles.decorator';
+import { User } from './entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -58,7 +59,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':id')
-  @Roles('admin')
+  @Roles('admin', 'owner', 'vet')
   async getUserById(@Param('id') id: number) {
     return await this.authService.findUserById(id);
   }
@@ -85,5 +86,10 @@ export class AuthController {
   @Roles('admin')
   async deleteUser(@Param('id') id: number) {
     return await this.authService.deleteUser(id);
+  }
+
+  @Get(':id')
+  async getUser(@Param('id') id: number): Promise<User> {
+    return this.authService.findOne(id);
   }
 }

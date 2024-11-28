@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany } from 'typeorm';
-import { Patient } from 'src/patients/entities/patients.entity';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { User } from '../../auth/entities/user.entity';
 import { Appointment } from 'src/appointments/entities/appointments.entity';
 import { MedicalRecord } from 'src/medical_records/entities/medical_record.entity';
 
@@ -26,8 +26,9 @@ export class Pet {
   @Column({ type: 'numeric', precision: 5, scale: 2, nullable: true })
   weight: number;
 
-  @ManyToOne(() => Patient, (patient) => patient.pets, { onDelete: 'CASCADE' })
-  patient: Patient;
+  @ManyToOne(() => User, (user) => user.pets, { cascade: true })
+  @JoinColumn({ name: 'userId' })
+  user: User;
 
   @OneToMany(() => Appointment, (appointment) => appointment.pet)
   appointments: Appointment[];

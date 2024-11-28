@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Pet } from './entities/pet.entity';
 import { Repository } from 'typeorm';
 import { CreatePetDto } from './dtos/create-pet.dto';
-import { PatientsService } from 'src/patients/patients.service';
 import { UpdatePetDto } from './dtos/update-pet.dto';
 import { AuthService } from 'src/auth/auth.service';
 
@@ -12,29 +11,26 @@ export class PetsService {
 
     constructor(
         @InjectRepository(Pet) private readonly petRepository: Repository<Pet>,
-        private readonly patientsService: PatientsService,
         private readonly authService: AuthService
     ){}
 
-    async createPet(createPetDto: CreatePetDto) {
-        try {
-            const pacient = await this.patientsService.findPatientById(createPetDto.patient);
+    async createPet(createPetDto: CreatePetDto & { userId: number }): Promise<Pet> {
+        const user = await this.authService.findUserById(createPetDto.userId);
 
+        if (!user) {
+            throw new NotFoundException(`User with ID ${createPetDto.userId} not found`);
+        }
 
-            const newPet = Object.assign({ ...createPetDto, pacient });
-            return this.petRepository.save(newPet);
-        
-        } catch (err) {
-            err;
-        }          
+        const newPet = this.petRepository.create({ ...createPetDto, user });
+        return this.petRepository.save(newPet);
     }
 
     async findAllPets() {
-        return await this.petRepository.find({ relations: ['patient'] });
+        return await this.petRepository.find({ relations: ['user'] });
     }
 
     async findPetById(id: number){
-        const pets = await this.petRepository.find({where:{ id }, relations: ['patient']});
+        const pets = await this.petRepository.find({where:{ id }, relations: ['user']});
 
         if(!pets){
             throw new NotFoundException(`Pet with ID ${id} not found`)
@@ -45,12 +41,12 @@ export class PetsService {
 
     async updatePet(id: number, updatePetDto: UpdatePetDto){
 
-        const patient = await this.authService.findUserById(updatePetDto.patient);
+        const user = await this.authService.findUserById(updatePetDto.user);
 
         const pet = await this.petRepository.preload({
             id,
             ...updatePetDto,
-            patient
+            user
         });
 
         if(!pet){

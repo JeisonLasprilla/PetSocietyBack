@@ -1,7 +1,8 @@
-import { IsString, MinLength, IsNotEmpty } from "class-validator";
+import { IsString, MinLength, IsNotEmpty, IsNumber } from "class-validator";
 
 export  class  CreatePetDto {
     @IsString()
+    @IsNotEmpty()
     name: string;
 
     @IsString()
@@ -24,6 +25,7 @@ export  class  CreatePetDto {
     @MinLength(3)
     weight: number;
 
+    @IsNumber()
     @IsNotEmpty()
-    patient: number;
+    userId: number;
 }

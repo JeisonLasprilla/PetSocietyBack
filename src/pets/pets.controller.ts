@@ -6,31 +6,32 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('pets')
 export class PetsController {
+    constructor(private readonly petsService: PetsService) {}
 
-    constructor(private readonly petsService:PetsService){}
-
-    
     @Post('register')
-    @Roles('admin', 'vet', 'owner')
-    createUser(@Body() createPetDto: CreatePetDto) {
-        return this.petsService.createPet(createPetDto);
+    async createPet(@Body() createPetDto: CreatePetDto) {
+        const userId = createPetDto.userId;
+        const pet = await this.petsService.createPet({ ...createPetDto, userId });
+        return pet;
     }
 
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Get()
-    @Roles('admin', 'vet')
+    @Roles('admin', 'vet', 'owner')
     async getAllPets() {
         return await this.petsService.findAllPets();
     }
 
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Get(':id')
     @Roles('admin', 'vet', 'owner')
-    async getUserById(@Param('id') id: number){
-        return await this.petsService.findPetById(id)
+    async getPetById(@Param('id') id: number) {
+        return await this.petsService.findPetById(id);
     }
 
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Patch(':id')
     @Roles('admin', 'vet', 'owner')
     async updatePet(
@@ -40,6 +41,7 @@ export class PetsController {
         return await this.petsService.updatePet(id, updatePetDto);
     }
 
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Delete(':id')
     @Roles('admin')
     async deletePet(@Param('id') id: number) {

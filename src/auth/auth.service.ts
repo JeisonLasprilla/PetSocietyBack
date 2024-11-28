@@ -54,13 +54,16 @@ export class AuthService {
       role: user.role,
     };
   }
-  
+
   async findAllUsers() {
-    return await this.userRepository.find();
+    return await this.userRepository.find({ relations: ['pets'] });
   }
 
   async findUserById(id: number) {
-    const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['pets'],
+    });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
@@ -110,5 +113,15 @@ export class AuthService {
     }
 
     throw new InternalServerErrorException('Error creating user');
+  }
+  async findOne(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['pets'],
+    });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    return user;
   }
 }

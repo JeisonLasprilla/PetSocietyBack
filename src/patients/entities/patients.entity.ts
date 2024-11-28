@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany } from 'typeorm';
-import { User } from 'src/auth/entities/user.entity';
+import { User } from '../../auth/entities/user.entity';
 import { Pet } from 'src/pets/entities/pet.entity';
 
 @Entity('patients')
@@ -16,7 +16,7 @@ export class Patient {
   @Column({ length: 20 })
   phone_number: string;
 
-  @OneToMany(() => Pet, (pet) => pet.patient)
+  @OneToMany(() => Pet, (pet) => pet.user)
   pets: Pet[];
 
   @CreateDateColumn({ type: 'timestamp' })
