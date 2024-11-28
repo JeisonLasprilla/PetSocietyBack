@@ -6,7 +6,8 @@ async function bootstrap() {
   
   app.enableCors({
     origin: [
-      'http://localhost:3001'  // Frontend en desarrollo
+      'http://localhost:3001',
+      'petsocietyback-production.up.railway.app'  // Frontend en desarrollo
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
