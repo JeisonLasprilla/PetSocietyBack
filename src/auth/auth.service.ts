@@ -8,6 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { Pet } from '../pets/entities/pet.entity';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from './dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -18,8 +19,10 @@ import { UpdateUserDto } from './dtos/update-user.dto';
 export class AuthService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(Pet) private readonly petRepository: Repository<Pet>,
     private readonly jwtService: JwtService,
   ) {}
+  
 
   async createUser(createUserDto: CreateUserDto) {
     try {
@@ -104,6 +107,34 @@ export class AuthService {
       this.handleDBErrors(error);
     }
   }
+
+  async addPetToUser(userId: number, petIds: number[]) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['pets'],
+    });
+  
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+  
+    // Buscar las mascotas por IDs
+    const petsToAdd = await this.petRepository.findByIds(petIds);
+  
+    if (!petsToAdd.length) {
+      throw new NotFoundException(`No pets found with the provided IDs`);
+    }
+  
+    // Agregar las mascotas al usuario
+    user.pets = [...(user.pets || []), ...petsToAdd];
+  
+    try {
+      return await this.userRepository.save(user);
+    } catch (error) {
+      this.handleDBErrors(error);
+    }
+  }
+  
 
   async deleteUser(id: number) {
     const user = await this.findUserById(id);

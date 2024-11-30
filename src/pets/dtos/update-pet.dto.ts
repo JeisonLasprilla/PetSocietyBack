@@ -1,8 +1,7 @@
-import { IsOptional, IsString, MinLength } from "class-validator";
+import { IsOptional, IsString, IsNumber, MinLength } from "class-validator";
 import { Patient } from "src/patients/entities/patients.entity";
 
-export  class  UpdatePetDto {
-
+export class UpdatePetDto {
     @IsOptional()
     @IsString()
     name: string;
@@ -20,7 +19,7 @@ export  class  UpdatePetDto {
     @IsOptional()
     @IsString()
     @MinLength(3)
-    bith_date: string;
+    birth_date: string;
 
     @IsOptional()
     @IsString()
@@ -28,12 +27,10 @@ export  class  UpdatePetDto {
     gender: string;
 
     @IsOptional()
-    @IsString()
-    @MinLength(3)
+    @IsNumber()
     weight: number;
 
     @IsOptional()
-    @IsString()
-    @MinLength(3)
+    @IsNumber()
     user: number;
 }

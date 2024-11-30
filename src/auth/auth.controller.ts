@@ -72,13 +72,13 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Patch(':id')
-  @Roles('admin')
-  async updateUser(
-    @Param('id') id: number,
-    @Body() updateUserDto: UpdateUserDto,
+  @Patch(':id/add-pet')
+  @Roles('admin', 'owner', 'vet')
+  async addPetToUser(
+    @Param('id') userId: number,
+    @Body() petIds: { petIds: number[] }
   ) {
-    return await this.authService.updateUser(id, updateUserDto);
+    return await this.authService.addPetToUser(userId, petIds.petIds);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

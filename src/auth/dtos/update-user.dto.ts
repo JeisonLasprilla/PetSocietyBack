@@ -1,4 +1,5 @@
-import { IsOptional, IsString, IsEmail, MinLength } from 'class-validator';
+import { IsOptional, IsString, IsEmail, MinLength, IsArray } from 'class-validator';
+import { Pet } from 'src/pets/entities/pet.entity';
 
 export class UpdateUserDto {
     @IsOptional()
@@ -12,4 +13,8 @@ export class UpdateUserDto {
     @IsOptional()
     @MinLength(6)
     password?: string;
+
+    @IsOptional()
+    @IsArray()
+    pets?: Pet[];
 }

@@ -30,7 +30,7 @@ export class User {
   @OneToMany(() => MedicalRecord, (medicalRecord) => medicalRecord.veterinarian)
   medicalRecords: MedicalRecord[];
 
-  @OneToMany(() => Pet, (pet) => pet.user)
+  @OneToMany(() => Pet, (pet) => pet.user, { cascade: true })
   pets: Pet[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
