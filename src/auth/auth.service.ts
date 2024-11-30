@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Pet } from '../pets/entities/pet.entity';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -119,8 +119,10 @@ export class AuthService {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
 
-    // Buscar las mascotas por IDs
-    const petsToAdd = await this.petRepository.findByIds(petIds);
+    // Buscar las mascotas por IDs usando findBy
+    const petsToAdd = await this.petRepository.findBy({
+      id: In(petIds), // Necesitarás importar In de typeorm
+    });
 
     if (!petsToAdd.length) {
       throw new NotFoundException(`No pets found with the provided IDs`);
