@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { PetsController } from './pets.controller';
 import { PetsService } from './pets.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,15 +8,15 @@ import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Pet]), // Registra el repositorio de Pet
-    PatientsModule,
+    TypeOrmModule.forFeature([Pet]),
+    forwardRef(() => PatientsModule),
     AuthModule,
   ],
   controllers: [PetsController],
   providers: [PetsService],
   exports: [
-    PetsService, 
-    TypeOrmModule, // Exporta TypeOrmModule para que otros módulos puedan usar PetRepository
+    PetsService,
+    TypeOrmModule,
   ],
 })
 export class PetsModule {}
