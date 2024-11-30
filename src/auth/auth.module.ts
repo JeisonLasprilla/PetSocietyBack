@@ -8,12 +8,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
 import { RolesGuard } from './guards/roles.guard';
-import { PetsModule } from '../pets/pets.module';
+import { Pet } from '../pets/entities/pet.entity';
 
 @Module({
   imports: [
     ConfigModule,
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Pet]),
     PassportModule.register({defaultStrategy: 'jwt'}),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -23,7 +23,6 @@ import { PetsModule } from '../pets/pets.module';
         signOptions: { expiresIn: configService.get('JWT_EXPIRES_IN') }
       })
     }),
-    PetsModule,
   ],
   exports: [AuthService, JwtStrategy, PassportModule, RolesGuard],
   controllers: [AuthController],

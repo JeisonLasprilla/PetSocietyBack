@@ -26,7 +26,7 @@ export class Pet {
   @Column({ type: 'numeric', precision: 5, scale: 2, nullable: true })
   weight: number;
 
-  @ManyToOne(() => User, (user) => user.pets, { cascade: true })
+  @ManyToOne(() => User, (user) => user.pets, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: User;
 
