@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
 import { RolesGuard } from './guards/roles.guard';
+import { PetsModule } from '../pets/pets.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { RolesGuard } from './guards/roles.guard';
         secret: configService.get('JWT_SECRET'),
         signOptions: { expiresIn: configService.get('JWT_EXPIRES_IN') }
       })
-    })
+    }),
+    PetsModule,
   ],
   exports: [AuthService, JwtStrategy, PassportModule, RolesGuard],
   controllers: [AuthController],

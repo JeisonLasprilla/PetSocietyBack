@@ -8,12 +8,15 @@ import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Pet]),
+    TypeOrmModule.forFeature([Pet]), // Registra el repositorio de Pet
     PatientsModule,
     AuthModule,
   ],
   controllers: [PetsController],
   providers: [PetsService],
-  exports: [PetsService]
+  exports: [
+    PetsService, 
+    TypeOrmModule, // Exporta TypeOrmModule para que otros módulos puedan usar PetRepository
+  ],
 })
 export class PetsModule {}
