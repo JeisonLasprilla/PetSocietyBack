@@ -6,12 +6,12 @@ export type CommentDocument = Comment & Document;
 @Schema()
 export class Comment {
     @Prop({ required: true })
-    content: string;
+    text: string;
 
     @Prop({ required: true })
-    userId: string;
+    author: string;
 
-    @Prop({ required: true })
+    @Prop({ required: true, default: Date.now })
     createdAt: Date;
 }
 

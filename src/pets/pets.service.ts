@@ -40,7 +40,6 @@ export class PetsService {
     }
 
     async updatePet(id: number, updatePetDto: UpdatePetDto){
-
         const user = await this.authService.findUserById(updatePetDto.user);
 
         const pet = await this.petRepository.preload({
