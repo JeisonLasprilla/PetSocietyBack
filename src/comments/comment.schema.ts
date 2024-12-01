@@ -5,14 +5,14 @@ export type CommentDocument = Comment & Document;
 
 @Schema()
 export class Comment {
-  @Prop({ required: true })
-  text: string;
+    @Prop({ required: true })
+    content: string;
 
-  @Prop({ required: true })
-  author: string;
+    @Prop({ required: true })
+    userId: string;
 
-  @Prop({ required: true })
-  createdAt: Date;
+    @Prop({ required: true })
+    createdAt: Date;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
